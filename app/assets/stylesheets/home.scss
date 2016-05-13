@@ -1,0 +1,20 @@
+// Place all the styles related to the Home controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+h1.bar-chart {
+  font-size: 50%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+#champion-grade {
+  float:left;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+#champion-level {
+  float:right;
+  padding-left: 40px;
+  padding-right: 40px;
+}

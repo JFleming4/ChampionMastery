@@ -1,0 +1,10 @@
+<%
+options = %w(na br eune euw jp kr lan las oce pbe ru tr)
+%>
+<div>
+  <%= form_for :person do |f| %>
+    Select Region: <%= f.select :region, options.map { |v| [v.upcase, v] } %><br />
+    Enter Summoner Name: <%= f.text_field :sumName %><br />
+    <%= f.submit "Get Stats"%>
+    <% end %>
+</div>
