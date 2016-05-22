@@ -107,8 +107,9 @@ class HomeController < ApplicationController
     attr_reader :champion_rank
     attr_reader :champion_level
     def api_key
-      api_file_path = File.join(Dir.home, '.riot', 'credentials')
-      File.read(api_file_path).chomp
+      # api_file_path = File.join(Dir.home, '.riot', 'credentials')
+      # File.read(api_file_path).chomp
+      ENV['api_key']
     end
 
     def process_mastery
