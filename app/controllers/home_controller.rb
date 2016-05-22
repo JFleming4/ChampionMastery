@@ -1,7 +1,6 @@
 require 'net/http'
 require 'json'
 require 'pp'
-require 'pry-byebug'
 class HomeController < ApplicationController
   def home
     @options = {}
