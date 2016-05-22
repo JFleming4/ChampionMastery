@@ -30,7 +30,7 @@ class HomeController < ApplicationController
       ]
     }
     @data_level = {
-      labels: ['5', '4', '3', '2', '1'],
+      labels: ['7', '6', '5', '4', '3', '2', '1'],
       datasets: [
         label: 'Highest Champion Grade',
         fillColor: 'rgba(151,187,205,0.2)',
@@ -154,6 +154,8 @@ class HomeController < ApplicationController
         'D-': []
       }
       @champion_level = {
+        '7': [],
+        '6': [],
         '5': [],
         '4': [],
         '3': [],
