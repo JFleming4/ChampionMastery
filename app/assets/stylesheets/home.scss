@@ -7,14 +7,19 @@ h1.bar-chart {
   padding-bottom: 5px;
 }
 
-#champion-grade {
-  float:left;
-  padding-left: 40px;
-  padding-right: 40px;
+.center-text {
+    text-align: center;
+    border: 3px;
+}
+
+.center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
 }
 
 #champion-level {
-  float:right;
+  float:center;
   padding-left: 40px;
   padding-right: 40px;
 }

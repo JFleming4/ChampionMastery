@@ -6,28 +6,11 @@ class HomeController < ApplicationController
     @options = {}
     person = params['person']
     mastery = MasteryInfo.new(person['sumName'], person['region'])
-    champion_grade_values = []
     champion_level_values = []
-    mastery.champion_rank.each do |_, val|
-      champion_grade_values.push(val.length)
-    end
 
     mastery.champion_level.each do |_, val|
       champion_level_values.push(val.length)
     end
-    @data_grade = {
-      labels: ['S+', 'S', 'S-', 'A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-'],
-      datasets: [
-        label: 'Highest Champion Grade',
-        fillColor: 'rgba(151,187,205,0.2)',
-        strokeColor: 'rgba(151,187,205,1)',
-        pointColor: 'rgba(151,187,205,1)',
-        pointStrokeColor: '#fff',
-        pointHighlightFill: '#fff',
-        pointHighlightStroke: 'rgba(151,187,205,1)',
-        data: champion_grade_values
-      ]
-    }
     @data_level = {
       labels: ['7', '6', '5', '4', '3', '2', '1'],
       datasets: [
@@ -103,7 +86,6 @@ class HomeController < ApplicationController
 
   # Return the relevant info for the champion mastery of a given summoner
   class MasteryInfo
-    attr_reader :champion_rank
     attr_reader :champion_level
     def api_key
       # api_file_path = File.join(Dir.home, '.riot', 'credentials')
@@ -114,7 +96,6 @@ class HomeController < ApplicationController
     def process_mastery
       @champion_mastery.each do |champion_data|
         champion_id = champion_data.fetch(:championId)
-        process_highest_grade(champion_data, champion_id)
         @champion_level[champion_data.fetch(:championLevel).to_s.to_sym]
           .push(champion_id)
         @champion_chest.push(champion_id) if champion_data.fetch(:chestGranted)
@@ -128,31 +109,9 @@ class HomeController < ApplicationController
       @next_level.push(champ_id)
     end
 
-    def process_highest_grade(champion, champ_id)
-      return if champion[:highestGrade].nil?
-      @champion_rank[champion.fetch(:highestGrade).to_sym].push(champ_id)
-    end
-
     def initialize(name, region = 'na')
       @champion_chest = []
       @next_level = []
-      @champion_rank = {
-        'S+': [],
-        'S': [],
-        'S-': [],
-        'A+': [],
-        'A': [],
-        'A-': [],
-        'B+': [],
-        'B': [],
-        'B-': [],
-        'C+': [],
-        'C': [],
-        'C-': [],
-        'D+': [],
-        'D': [],
-        'D-': []
-      }
       @champion_level = {
         '7': [],
         '6': [],

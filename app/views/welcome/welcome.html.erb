@@ -1,11 +1,17 @@
 <%
 options = %w(na br eune euw jp kr lan las oce pbe ru tr)
 %>
-<div>
+<div class='form-parent container'>
   <%= form_for :person do |f| %>
-    Select Region: <%= f.select :region, options.map { |v| [v.upcase, v] } %><br />
-    Enter Summoner Name: <%= f.text_field :sumName %><br />
-    <%= f.submit "Get Stats"%>
+    <div class='form-component region-select row'>
+      <p class='col-xs-2 col-xs-offset-4'>Select Region: <p><%= f.select :region, options.map { |v| [v.upcase, v] },class:'col-xs-2' %><br />
+    </div>
+    <div class='form-component summoner-name row'>
+      <p class='col-xs-2 col-xs-offset-4'>Summoner Name:<p> <%= f.text_field :sumName, class:'col-xs-2' %><br />
+    </div>
+    <div class='form-component submit row'>
+      <%= f.submit "Get Stats", class:'btn-large submit col-xs-4 col-xs-offset-4'%>
+    </div>
     <% end %>
 </div>
 <footer>
