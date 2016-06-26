@@ -1,11 +1,27 @@
-<div class="main">
-  <div id="champion-level" class="bar-chart center">
-    <h1 class='center-text'>Champions at Each Level</h1>
-    <%= bar_chart @data_level, @options %>
-  </div id="next-level" class="scroll-table">
-  <div>
+<div class="main container">
+  <div id="champion-level" class="bar-chart row">
+    <div class='col-xs-offset-4'>
+      <h1>Champions at Each Level</h1>
+      <%= bar_chart @data_level, @options %>
+    </div>
   </div>
-  <div id="earned-chest" class="scroll-table">
+  <div id="scroll-lists" class="row">
+    <div id="next-level" class="col-xs-offset-3 col-xs-2">
+      <hi>Champions Close to Next Level</h1>
+      <ul class="scroll">
+        <% @next_champ_level.each do |champ| %>
+          <li><%=image_tag (champ.fetch(:img)), title:champ.fetch(:title)%></li>
+        <% end %>
+      </ul>
+    </div>
+    <div id="earned-chest" class="col-xs-offset-2 col-xs-2">
+      <hi>Champions Who Unlocked Chests</h1>
+      <ul class="scroll">
+        <% @mystery_chest.each do |champ| %>
+          <li><%=image_tag (champ.fetch(:img)), title:champ.fetch(:title)%></li>
+        <% end %>
+      </ul>
+    </div>
   </div>
 </div>
 <br>

@@ -1,14 +1,18 @@
 require 'net/http'
 require 'json'
 require 'pp'
+# Controller for the stats page
 class HomeController < ApplicationController
   def home
     @options = {}
     person = params['person']
-    mastery = MasteryInfo.new(person['sumName'], person['region'])
+    @mastery = MasteryInfo.new(person['sumName'], person['region'])
     champion_level_values = []
+    @img_string = "http://ddragon.leagueoflegends.com/cdn/#{@mastery.champions.fetch(:version)}/img/champion/"
+    @next_champ_level = process_next_champ_level
+    @mystery_chest = process_mystery_chest
 
-    mastery.champion_level.each do |_, val|
+    @mastery.champion_level.each do |_, val|
       champion_level_values.push(val.length)
     end
     @data_level = {
@@ -24,6 +28,34 @@ class HomeController < ApplicationController
         data: champion_level_values
       ]
     }
+  end
+
+  def process_next_champ_level
+    champions = @mastery.champions.fetch(:data)
+    next_level_return = []
+    next_level = @mastery.next_level
+    next_level.each do |champ_id|
+      champ = champions.fetch(champ_id.to_s.to_sym)
+      next_level_return.push(
+        img: "#{@img_string}#{champ.fetch(:image).fetch(:full)}",
+        title: "#{champ.fetch(:name)}"
+      )
+    end
+    next_level_return
+  end
+
+  def process_mystery_chest
+    champions = @mastery.champions.fetch(:data)
+    mystery_return = []
+    mystery = @mastery.champion_chest
+    mystery.each do |champ_id|
+      champ = champions.fetch(champ_id.to_s.to_sym)
+      mystery_return.push(
+        img: "#{@img_string}#{champ.fetch(:image).fetch(:full)}",
+        title: "#{champ.fetch(:name)}"
+      )
+    end
+    mystery_return
   end
 
   # Manage API calls for an entered user
@@ -73,11 +105,14 @@ class HomeController < ApplicationController
       query(uri)
     end
 
-    def get_champion_list
+    def champion_list
+      uri = URI("#{@champion_url}")
+      params = { dataById: true, champData: 'image' }
+      query(uri, params)
     end
 
-    def query(uri)
-      uri.query = URI.encode_www_form(api_key: @api)
+    def query(uri, params = {})
+      uri.query = URI.encode_www_form(params.merge(api_key: @api))
       response = Net::HTTP.get_response(uri)
       pie = JSON.parse(response.body, symbolize_names: true)
       pie
@@ -86,7 +121,7 @@ class HomeController < ApplicationController
 
   # Return the relevant info for the champion mastery of a given summoner
   class MasteryInfo
-    attr_reader :champion_level
+    attr_reader :champion_level, :champions, :champion_chest, :next_level
     def api_key
       # api_file_path = File.join(Dir.home, '.riot', 'credentials')
       # File.read(api_file_path).chomp
@@ -106,25 +141,19 @@ class HomeController < ApplicationController
     def process_next_level(champion, champ_id)
       return if champion[:championPointsUntilNextLevel].nil?
       return unless champion.fetch(:championPointsUntilNextLevel) < 200
+      return unless champion.fetch(:championPointsUntilNextLevel) > 0
       @next_level.push(champ_id)
     end
 
     def initialize(name, region = 'na')
       @champion_chest = []
       @next_level = []
-      @champion_level = {
-        '7': [],
-        '6': [],
-        '5': [],
-        '4': [],
-        '3': [],
-        '2': [],
-        '1': []
-      }
+      @champion_level = { '7': [], '6': [], '5': [], '4': [], '3': [], '2': [], '1': [] }
       @summmoner_name = name
       @riot = API.new(api_key, @summmoner_name, region)
       @summoner_id = @riot.get_summoner_id_byname(@summmoner_name)
       @champion_mastery = @riot.get_champion_mastery(@summoner_id)
+      @champions = @riot.champion_list
       process_mastery
     end
   end

@@ -7,6 +7,12 @@ h1.bar-chart {
   padding-bottom: 5px;
 }
 
+.scroll {
+  list-style-type: none;
+  overflow:hidden;
+  overflow-y:scroll;
+  height:200px;
+}
 .center-text {
     text-align: center;
     border: 3px;
