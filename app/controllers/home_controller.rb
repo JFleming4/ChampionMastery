@@ -140,7 +140,7 @@ class HomeController < ApplicationController
 
     def process_next_level(champion, champ_id)
       return if champion[:championPointsUntilNextLevel].nil?
-      return unless champion.fetch(:championPointsUntilNextLevel) < 200
+      return unless champion.fetch(:championPointsUntilNextLevel) < 500
       return unless champion.fetch(:championPointsUntilNextLevel) > 0
       @next_level.push(champ_id)
     end
