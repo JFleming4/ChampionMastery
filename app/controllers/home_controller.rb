@@ -34,11 +34,11 @@ class HomeController < ApplicationController
     champions = @mastery.champions.fetch(:data)
     next_level_return = []
     next_level = @mastery.next_level
-    next_level.each do |champ_id|
-      champ = champions.fetch(champ_id.to_s.to_sym)
+    next_level.each do |champ_obj|
+      champ = champions.fetch(champ_obj.fetch(:champId).to_s.to_sym)
       next_level_return.push(
         img: "#{@img_string}#{champ.fetch(:image).fetch(:full)}",
-        title: "#{champ.fetch(:name)}"
+        title: "#{champ.fetch(:name)}: #{champ_obj.fetch(:points)}"
       )
     end
     next_level_return
@@ -140,9 +140,8 @@ class HomeController < ApplicationController
 
     def process_next_level(champion, champ_id)
       return if champion[:championPointsUntilNextLevel].nil?
-      return unless champion.fetch(:championPointsUntilNextLevel) < 500
       return unless champion.fetch(:championPointsUntilNextLevel) > 0
-      @next_level.push(champ_id)
+      @next_level.push(champId: champ_id, points: champion.fetch(:championPointsUntilNextLevel))
     end
 
     def initialize(name, region = 'na')
@@ -155,6 +154,7 @@ class HomeController < ApplicationController
       @champion_mastery = @riot.get_champion_mastery(@summoner_id)
       @champions = @riot.champion_list
       process_mastery
+      @next_level = @next_level.sort { |a, b| a.fetch(:points).to_f <=> b.fetch(:points).to_f }
     end
   end
 end
