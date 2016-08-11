@@ -5,6 +5,7 @@ require 'pp'
 class HomeController < ApplicationController
   def home
     @options = {}
+    @grid = []
     person = params['person']
     @mastery = MasteryInfo.new(person['sumName'], person['region'])
     champion_level_values = []
@@ -28,6 +29,22 @@ class HomeController < ApplicationController
         data: champion_level_values
       ]
     }
+  end
+
+  def build_grid_view(sort = 'Alpha', filter_type = 'All')
+    list = sort_list(sort, filter_type)
+    list.each_slice(10).to_a
+  end
+
+  def sort_list(sort, filter_type)
+    list
+    list = @champions_grid if filter_type == 'All'
+    list = @champion_chest if filter_type == 'Chest'
+    list = @champion_no_chest if filter_type == 'NoChest'
+    list.sort { |a, b| a.fetch(:name).upcase <=> b.fetch(:name).upcase } if sort == 'Alpha'
+    list.sort { |a, b| b.fetch(:points) <=> a.fetch(:points) } if sort == 'Most'
+    list.sort { |a, b| a.fetch(:nxLvl) <=> b.fetch(:nxLvl) } if sort == 'Level'
+    list
   end
 
   def process_next_champ_level
@@ -121,11 +138,11 @@ class HomeController < ApplicationController
 
   # Return the relevant info for the champion mastery of a given summoner
   class MasteryInfo
-    attr_reader :champion_level, :champions, :champion_chest, :next_level
+    attr_reader :champion_level, :champions, :champion_chest, :champions_grid, :champion_no_chest
     def api_key
-      # api_file_path = File.join(Dir.home, '.riot', 'credentials')
-      # File.read(api_file_path).chomp
-      ENV['api_key']
+      api_file_path = File.join(Dir.home, '.riot', 'credentials')
+      File.read(api_file_path).chomp
+      # ENV['api_key']
     end
 
     def process_mastery
@@ -133,20 +150,31 @@ class HomeController < ApplicationController
         champion_id = champion_data.fetch(:championId)
         @champion_level[champion_data.fetch(:championLevel).to_s.to_sym]
           .push(champion_id)
-        @champion_chest.push(champion_id) if champion_data.fetch(:chestGranted)
-        process_next_level(champion_data, champion_id)
+        champion = {
+          champId: champion_id,
+          name: champions.fetch(champion_id.to_s.to_sym).fetch(:name),
+          nxLvl: champion_data.fetch(:championPointsUntilNextLevel),
+          points: champion_data.fetch(:championPoints),
+          chest: champion_data.fetch(:chestGranted)
+        }
+        if champion_data.fetch(:chestGranted)
+          @champion_chest.push(champion)
+        else
+          @champion_no_chest.push(champion)
+        end
+        @champions_grid.push(champion)
       end
     end
 
     def process_next_level(champion, champ_id)
       return if champion[:championPointsUntilNextLevel].nil?
-      return unless champion.fetch(:championPointsUntilNextLevel) > 0
       @next_level.push(champId: champ_id, points: champion.fetch(:championPointsUntilNextLevel))
     end
 
     def initialize(name, region = 'na')
       @champion_chest = []
-      @next_level = []
+      @champion_no_chest = []
+      @champions_grid = []
       @champion_level = { '7': [], '6': [], '5': [], '4': [], '3': [], '2': [], '1': [] }
       @summmoner_name = name
       @riot = API.new(api_key, @summmoner_name, region)
@@ -154,7 +182,7 @@ class HomeController < ApplicationController
       @champion_mastery = @riot.get_champion_mastery(@summoner_id)
       @champions = @riot.champion_list
       process_mastery
-      @next_level = @next_level.sort { |a, b| a.fetch(:points).to_f <=> b.fetch(:points).to_f }
+      # @next_level = @next_level.sort { |a, b| a.fetch(:points).to_f <=> b.fetch(:points).to_f }
     end
   end
 end
