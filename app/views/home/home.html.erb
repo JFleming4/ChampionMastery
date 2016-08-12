@@ -5,23 +5,18 @@
       <%= bar_chart @data_level, @options %>
     </div>
   </div>
-  <div id="scroll-lists" class="row">
-    <div id="next-level" class="col-xs-offset-3 col-xs-2">
-      <hi>Champions Close to Next Level</h1>
-      <ul class="scroll">
-        <% @next_champ_level.each do |champ| %>
-          <li><%=image_tag (champ.fetch(:img)), title:champ.fetch(:title)%></li>
-        <% end %>
-      </ul>
-    </div>
-    <div id="earned-chest" class="col-xs-offset-2 col-xs-2">
-      <hi>Champions Who Unlocked Chests</h1>
-      <ul class="scroll">
-        <% @mystery_chest.each do |champ| %>
-          <li><%=image_tag (champ.fetch(:img)), title:champ.fetch(:title)%></li>
-        <% end %>
-      </ul>
-    </div>
+
+  <div>
+    <% build_grid_view('Alpha', 'All', 6).each do |row| %>
+      <div class="row championRow">
+        <% row.each do |champ| %>
+          <div class="col-xs-2">
+            <img class="img-responsive" src=<%=(champ.fetch(:img))%>>
+          </div>
+        <%end%>
+      </div>
+    <%end%>
+  </div>
   </div>
 </div>
 <br>
