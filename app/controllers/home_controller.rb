@@ -10,8 +10,8 @@ class HomeController < ApplicationController
     @mastery = MasteryInfo.new(person['sumName'], person['region'])
     champion_level_values = []
     @img_string = "http://ddragon.leagueoflegends.com/cdn/#{@mastery.champions.fetch(:version)}/img/champion/"
-    @next_champ_level = process_next_champ_level
-    @mystery_chest = process_mystery_chest
+    # @next_champ_level = process_next_champ_level
+    # @mystery_chest = process_mystery_chest
 
     @mastery.champion_level.each do |_, val|
       champion_level_values.push(val.length)
@@ -47,33 +47,33 @@ class HomeController < ApplicationController
     list
   end
 
-  def process_next_champ_level
-    champions = @mastery.champions.fetch(:data)
-    next_level_return = []
-    next_level = @mastery.next_level
-    next_level.each do |champ_obj|
-      champ = champions.fetch(champ_obj.fetch(:champId).to_s.to_sym)
-      next_level_return.push(
-        img: "#{@img_string}#{champ.fetch(:image).fetch(:full)}",
-        title: "#{champ.fetch(:name)}: #{champ_obj.fetch(:points)}"
-      )
-    end
-    next_level_return
-  end
+  # def process_next_champ_level
+  #   champions = @mastery.champions.fetch(:data)
+  #   next_level_return = []
+  #   next_level = @mastery.next_level
+  #   next_level.each do |champ_obj|
+  #     champ = champions.fetch(champ_obj.fetch(:champId).to_s.to_sym)
+  #     next_level_return.push(
+  #       img: "#{@img_string}#{champ.fetch(:image).fetch(:full)}",
+  #       title: "#{champ.fetch(:name)}: #{champ_obj.fetch(:points)}"
+  #     )
+  #   end
+  #   next_level_return
+  # end
 
-  def process_mystery_chest
-    champions = @mastery.champions.fetch(:data)
-    mystery_return = []
-    mystery = @mastery.champion_chest
-    mystery.each do |champ_id|
-      champ = champions.fetch(champ_id.to_s.to_sym)
-      mystery_return.push(
-        img: "#{@img_string}#{champ.fetch(:image).fetch(:full)}",
-        title: "#{champ.fetch(:name)}"
-      )
-    end
-    mystery_return
-  end
+  # def process_mystery_chest
+  #   champions = @mastery.champions.fetch(:data)
+  #   mystery_return = []
+  #   mystery = @mastery.champion_chest
+  #   mystery.each do |champ_id|
+  #     champ = champions.fetch(champ_id.to_s.to_sym)
+  #     mystery_return.push(
+  #       img: "#{@img_string}#{champ.fetch(:image).fetch(:full)}",
+  #       title: "#{champ.fetch(:name)}"
+  #     )
+  #   end
+  #   mystery_return
+  # end
 
   # Manage API calls for an entered user
   class API
@@ -152,7 +152,7 @@ class HomeController < ApplicationController
           .push(champion_id)
         champion = {
           champId: champion_id,
-          name: champions.fetch(champion_id.to_s.to_sym).fetch(:name),
+          name: champions.fetch(:data).fetch(champion_id.to_s.to_sym).fetch(:name),
           nxLvl: champion_data.fetch(:championPointsUntilNextLevel),
           points: champion_data.fetch(:championPoints),
           chest: champion_data.fetch(:chestGranted)
@@ -164,11 +164,6 @@ class HomeController < ApplicationController
         end
         @champions_grid.push(champion)
       end
-    end
-
-    def process_next_level(champion, champ_id)
-      return if champion[:championPointsUntilNextLevel].nil?
-      @next_level.push(champId: champ_id, points: champion.fetch(:championPointsUntilNextLevel))
     end
 
     def initialize(name, region = 'na')
