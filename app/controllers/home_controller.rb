@@ -42,9 +42,9 @@ class HomeController < ApplicationController
     list = @mastery.champions_grid if filter_type == 'All'
     list = @mastery.champion_chest if filter_type == 'Chest'
     list = @mastery.champion_no_chest if filter_type == 'NoChest'
-    list.sort { |a, b| a.fetch(:name).upcase <=> b.fetch(:name).upcase } if sort == 'Alpha'
-    list.sort { |a, b| b.fetch(:points) <=> a.fetch(:points) } if sort == 'Most'
-    list.sort { |a, b| a.fetch(:nxLvl) <=> b.fetch(:nxLvl) } if sort == 'Level'
+    list = list.sort { |a, b| a.fetch(:name).upcase <=> b.fetch(:name).upcase } if sort == 'Alpha'
+    list = list.sort { |a, b| b.fetch(:points) <=> a.fetch(:points) } if sort == 'Most'
+    list = list.sort { |a, b| a.fetch(:nxLvl) <=> b.fetch(:nxLvl) } if sort == 'Level'
     list
   end
 
