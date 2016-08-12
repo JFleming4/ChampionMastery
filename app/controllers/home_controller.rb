@@ -3,6 +3,7 @@ require 'json'
 require 'pp'
 # Controller for the stats page
 class HomeController < ApplicationController
+  helper_method :build_grid_view
   def home
     @options = {}
     @grid = []
@@ -29,18 +30,18 @@ class HomeController < ApplicationController
         data: champion_level_values
       ]
     }
+    options={responsive: true}
   end
 
-  def build_grid_view(sort = 'Alpha', filter_type = 'All')
+  def build_grid_view(sort = 'Alpha', filter_type = 'All', size = 6)
     list = sort_list(sort, filter_type)
-    list.each_slice(10).to_a
+    list.each_slice(size).to_a
   end
 
   def sort_list(sort, filter_type)
-    list
-    list = @champions_grid if filter_type == 'All'
-    list = @champion_chest if filter_type == 'Chest'
-    list = @champion_no_chest if filter_type == 'NoChest'
+    list = @mastery.champions_grid if filter_type == 'All'
+    list = @mastery.champion_chest if filter_type == 'Chest'
+    list = @mastery.champion_no_chest if filter_type == 'NoChest'
     list.sort { |a, b| a.fetch(:name).upcase <=> b.fetch(:name).upcase } if sort == 'Alpha'
     list.sort { |a, b| b.fetch(:points) <=> a.fetch(:points) } if sort == 'Most'
     list.sort { |a, b| a.fetch(:nxLvl) <=> b.fetch(:nxLvl) } if sort == 'Level'
@@ -155,7 +156,8 @@ class HomeController < ApplicationController
           name: champions.fetch(:data).fetch(champion_id.to_s.to_sym).fetch(:name),
           nxLvl: champion_data.fetch(:championPointsUntilNextLevel),
           points: champion_data.fetch(:championPoints),
-          chest: champion_data.fetch(:chestGranted)
+          chest: champion_data.fetch(:chestGranted),
+          img: "http://ddragon.leagueoflegends.com/cdn/#{champions.fetch(:version)}/img/champion/#{champions.fetch(:data).fetch(champion_id.to_s.to_sym).fetch(:image).fetch(:full)}"
         }
         if champion_data.fetch(:chestGranted)
           @champion_chest.push(champion)
