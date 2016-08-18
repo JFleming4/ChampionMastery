@@ -33,9 +33,12 @@ class HomeController < ApplicationController
     options={responsive: true}
   end
 
-  def build_grid_view(sort = 'Alpha', filter_type = 'All', size = 6)
+  def build_grid_view
+    params['sort'] = params['sort'].presence || 'Alpha'
+    params['filter_type'] = params['filter_type'].presence || 'All'
+    params['size'] = params['size'].presence || '6'
     list = sort_list(sort, filter_type)
-    list.each_slice(size).to_a
+    list.each_slice(size.to_i).to_a
   end
 
   def sort_list(sort, filter_type)

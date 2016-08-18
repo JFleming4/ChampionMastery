@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   root 'welcome#welcome'
   post '/' => 'home#home'
+  get '/build_grid_view' => 'home#build_grid_view', :as => 'build_grid_view'
 
   # 'home#home'
   # The priority is based upon order of creation: first created -> highest priority.
