@@ -7,6 +7,19 @@
   </div>
 
   <div>
+
+    <select id="ChampionSort">
+      <option value="Alpha">Alphabetically</option>
+      <option value="Most">Most XP</option>
+      <option value="Level">Next Level</option>
+    </select>
+
+    <select id="chestFilter">
+      <option value="All">All</option>
+      <option value="Chest">Mastery Chest</option>
+      <option value="NoChest">No Chest</option>
+    </select>
+
     <% build_grid_view.each do |row| %>
       <div class="row championRow">
         <% row.each do |champ| %>
