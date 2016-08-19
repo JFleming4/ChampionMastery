@@ -37,7 +37,8 @@ class HomeController < ApplicationController
 
   end
 
-  def build_grid_view
+
+  def return_data
     sort = params['sort'].presence || 'Alpha'
     filter_type = params['filter_type'].presence || 'All'
     size = '6'
@@ -45,7 +46,13 @@ class HomeController < ApplicationController
     region = params['region'] || 'na'
     @mastery = MasteryInfo.new(sum_name, region) if @mastery.nil?
     list = sort_list(sort, filter_type)
-    render json: list.each_slice(size.to_i).to_a
+    { data: list.each_slice(size.to_i).to_a }
+  end
+  helper_method :return_data
+
+  def build_grid_view
+
+    render json: return_data
   end
 
   def sort_list(sort, filter_type)
