@@ -17,6 +17,7 @@ class HomeController < ApplicationController
     @mastery.champion_level.each do |_, val|
       champion_level_values.push(val.length)
     end
+    options = {responsive: true}
     @data_level = {
       labels: ['7', '6', '5', '4', '3', '2', '1'],
       datasets: [
@@ -28,14 +29,18 @@ class HomeController < ApplicationController
         pointHighlightFill: '#fff',
         pointHighlightStroke: 'rgba(151,187,205,1)',
         data: champion_level_values
-      ]
+      ],
+      options: options
     }
-    options={responsive: true}
+
   end
 
-  def build_grid_view(sort = 'Alpha', filter_type = 'All', size = 6)
+  def build_grid_view
+    sort = params['sort'].presence || 'Alpha'
+    filter_type = params['filter_type'].presence || 'All'
+    size = params['size'].presence || '6'
     list = sort_list(sort, filter_type)
-    list.each_slice(size).to_a
+    list.each_slice(size.to_i).to_a
   end
 
   def sort_list(sort, filter_type)
