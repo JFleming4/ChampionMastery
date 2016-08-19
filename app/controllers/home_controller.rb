@@ -158,9 +158,9 @@ class HomeController < ApplicationController
   class MasteryInfo
     attr_reader :champion_level, :champions, :champion_chest, :champions_grid, :champion_no_chest
     def api_key
-      api_file_path = File.join(Dir.home, '.riot', 'credentials')
-      File.read(api_file_path).chomp
-      # ENV['api_key']
+      # api_file_path = File.join(Dir.home, '.riot', 'credentials')
+      # File.read(api_file_path).chomp
+      ENV['api_key']
     end
 
     def process_mastery

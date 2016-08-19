@@ -5,6 +5,10 @@ $(document).ready(function() {
     var summonerRegion = $('#person_region').val();
 
     e.preventDefault();
-    window.location.replace("http://localhost:3000/"+summonerRegion+"/"+summonerName);
+    // Local path
+    // window.location.replace("http://localhost:3000/"+summonerRegion+"/"+summonerName);
+
+    // Deploy Path
+    window.location.replace("https://champion-mastery.herokuapp.com/"+summonerRegion+"/"+summonerName);
   });
 });
