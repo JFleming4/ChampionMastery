@@ -19,10 +19,8 @@
       <option value="Chest">Mastery Chest</option>
       <option value="NoChest">No Chest</option>
     </select>
-
-    <% build_grid_view.each do |row| %>
       <div class="row championRow">
-        <% row.each do |champ| %>
+        <%row.each do |champ| %>
           <div class="col-xs-2">
             <img class="img-responsive" src=<%=(champ.fetch(:img))%>>
           </div>
@@ -33,6 +31,7 @@
   </div>
 </div>
 <br>
+  <% return_data[:data].each do |row| %>
 <footer id='disclaimer' class'text-center'>
   <p>Champion Mastery isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.</p>
 </footer>
