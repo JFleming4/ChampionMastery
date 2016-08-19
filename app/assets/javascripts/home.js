@@ -2,6 +2,8 @@ $(document).ready(function() {
   $( "#ChampionSort, #chestFilter").change(function() {
     var sortingType = $("#ChampionSort").val();
     var filter = $("#chestFilter").val();
+    championsElement = $("#champions");
+    championsElement.fadeTo( "slow", 0.33 );
     $.ajax({
       type:'get',
       url:window.location.href+'/build_grid_view',
@@ -10,7 +12,6 @@ $(document).ready(function() {
         filter_type: filter,
       },
     }).done(function(result){
-      championsElement = $("#champions");
       champs="";
       result.data.forEach(function(arr){
         champs+='<div class="row championRow">';
@@ -24,11 +25,9 @@ $(document).ready(function() {
         });
         champs+="</div>";
       });
-      championsElement.fadeOut(500, function(){
-        championsElement.empty();
-        championsElement.append(champs);
-      });
-      championsElement.fadeIn(500);
+      championsElement.empty();
+      championsElement.append(champs);
+      championsElement.fadeTo("slow",1);
     });
   });
 });
