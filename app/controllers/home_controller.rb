@@ -40,12 +40,12 @@ class HomeController < ApplicationController
   def build_grid_view
     sort = params['sort'].presence || 'Alpha'
     filter_type = params['filter_type'].presence || 'All'
-    size = params['size'].presence || '6'
+    size = '6'
     sum_name = params['sumName'] || 'SilentSith'
     region = params['region'] || 'na'
     @mastery = MasteryInfo.new(sum_name, region) if @mastery.nil?
     list = sort_list(sort, filter_type)
-    list.each_slice(size.to_i).to_a
+    render json: list.each_slice(size.to_i).to_a
   end
 
   def sort_list(sort, filter_type)
