@@ -7,8 +7,10 @@ class HomeController < ApplicationController
   def home
     @options = {}
     @grid = []
-    person = params['person']
-    @mastery = MasteryInfo.new(person['sumName'], person['region'])
+    # person = params['person']
+    sum_name = params['sumName']
+    region = params['region']
+    @mastery = MasteryInfo.new(sum_name, region)
     champion_level_values = []
     @img_string = "http://ddragon.leagueoflegends.com/cdn/#{@mastery.champions.fetch(:version)}/img/champion/"
     # @next_champ_level = process_next_champ_level
@@ -17,7 +19,7 @@ class HomeController < ApplicationController
     @mastery.champion_level.each do |_, val|
       champion_level_values.push(val.length)
     end
-    options = {responsive: true}
+    options = { responsive: true }
     @data_level = {
       labels: ['7', '6', '5', '4', '3', '2', '1'],
       datasets: [
@@ -39,6 +41,9 @@ class HomeController < ApplicationController
     sort = params['sort'].presence || 'Alpha'
     filter_type = params['filter_type'].presence || 'All'
     size = params['size'].presence || '6'
+    sum_name = params['sumName'] || 'SilentSith'
+    region = params['region'] || 'na'
+    @mastery = MasteryInfo.new(sum_name, region) if @mastery.nil?
     list = sort_list(sort, filter_type)
     list.each_slice(size.to_i).to_a
   end
