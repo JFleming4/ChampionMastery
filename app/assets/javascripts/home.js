@@ -18,7 +18,7 @@ $(document).ready(function() {
         console.log(champs);
         arr.forEach(function(champion){
           champs+='<div class="col-xs-2 champion">';
-          champs+='<img class="img-responsive" src="'+champion.img+'">';
+          champs+='<img class="img-responsive" title="Champion Level: '+champion.lvl+'&#013;Next Level:'+champion.nxLvl+'" src="'+champion.img+'">';
           champs+= champion.name;
           champs+="</div>";
           console.log(champion.img);

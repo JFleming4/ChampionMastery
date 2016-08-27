@@ -25,7 +25,7 @@
         <div class="row championRow">
           <%row.each do |champ| %>
             <div class="col-xs-2 champion">
-              <img class="img-responsive" src=<%=(champ.fetch(:img))%>>
+              <img class="img-responsive" title ="Champion Level: <%=(champ.fetch(:lvl))%>&#013;Next Level: <%=(champ.fetch(:nxLvl))%>" src=<%=(champ.fetch(:img))%>>
               <%=champ.fetch(:name)%>
             </div>
           <%end%>

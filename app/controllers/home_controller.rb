@@ -171,6 +171,7 @@ class HomeController < ApplicationController
         champion = {
           champId: champion_id,
           name: champions.fetch(:data).fetch(champion_id.to_s.to_sym).fetch(:name),
+          lvl: champion_data.fetch(:championLevel),
           nxLvl: champion_data.fetch(:championPointsUntilNextLevel),
           points: champion_data.fetch(:championPoints),
           chest: champion_data.fetch(:chestGranted),
