@@ -61,37 +61,9 @@ class HomeController < ApplicationController
     list = @mastery.champion_no_chest if filter_type == 'NoChest'
     list = list.sort { |a, b| a.fetch(:name).upcase <=> b.fetch(:name).upcase } if sort == 'Alpha'
     list = list.sort { |a, b| b.fetch(:points) <=> a.fetch(:points) } if sort == 'Most'
-    list = list.sort { |a, b| a.fetch(:nxLvl) <=> b.fetch(:nxLvl) } if sort == 'Level'
+    list = list.reject { |a| a.fetch(:nxLvl) == 0}.sort { |a, b| a.fetch(:nxLvl) <=> b.fetch(:nxLvl) } if sort == 'Level'
     list
   end
-
-  # def process_next_champ_level
-  #   champions = @mastery.champions.fetch(:data)
-  #   next_level_return = []
-  #   next_level = @mastery.next_level
-  #   next_level.each do |champ_obj|
-  #     champ = champions.fetch(champ_obj.fetch(:champId).to_s.to_sym)
-  #     next_level_return.push(
-  #       img: "#{@img_string}#{champ.fetch(:image).fetch(:full)}",
-  #       title: "#{champ.fetch(:name)}: #{champ_obj.fetch(:points)}"
-  #     )
-  #   end
-  #   next_level_return
-  # end
-
-  # def process_mystery_chest
-  #   champions = @mastery.champions.fetch(:data)
-  #   mystery_return = []
-  #   mystery = @mastery.champion_chest
-  #   mystery.each do |champ_id|
-  #     champ = champions.fetch(champ_id.to_s.to_sym)
-  #     mystery_return.push(
-  #       img: "#{@img_string}#{champ.fetch(:image).fetch(:full)}",
-  #       title: "#{champ.fetch(:name)}"
-  #     )
-  #   end
-  #   mystery_return
-  # end
 
   # Manage API calls for an entered user
   class API
