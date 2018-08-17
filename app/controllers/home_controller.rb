@@ -71,26 +71,26 @@ class HomeController < ApplicationController
       @api = api_key
       @region = region
       @platform_id = get_platform_id(@region)
-      @champion_url = 'https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion'
-      @baseurl = "https://#{@region}.api.pvp.net"
-      @static_data_url = "#{@baseurl}/api/lol/static-data/#{@region}/v1.2"
-      @summoner_data_url = "#{@baseurl}/api/lol/#{@region}/v1.4/summoner"
+      @baseurl = "https://#{@platform_id}.api.riotgames.com"
+      @static_data_url = "#{@baseurl}/lol/static-data/v3"
+      @champion_url = "#{@static_data_url}/champions"
+      @summoner_data_url = "#{@baseurl}/lol/summoner/v3/summoners/by-names"
       @summoner_id = get_summoner_id_byname(name)
-      @champioin_mastery_url = "#{@baseurl}/championmastery/location/#{@platform_id}/player"
+      @champioin_mastery_url = "#{@baseurl}/lol/champion-mastery/v3/champion-masteries/by-summoner"
     end
 
     def get_platform_id(region)
       case region
-      when 'na' then 'NA1'
-      when 'eune' then 'EUN1'
-      when 'euw' then 'EUW1'
-      when 'jp' then 'JP1'
-      when 'kr' then 'KR'
-      when 'lan' then 'LA1'
-      when 'las' then 'LA2'
-      when 'oce' then 'OC1'
-      when 'ru' then 'RU'
-      when 'tr' then 'TR1'
+      when 'na' then 'na1'
+      when 'eune' then 'eun1'
+      when 'euw' then 'euw1'
+      when 'jp' then 'jp1'
+      when 'kr' then 'kr'
+      when 'lan' then 'la1'
+      when 'las' then 'la2'
+      when 'oce' then 'oc1'
+      when 'ru' then 'ru'
+      when 'tr' then 'tr1'
       else ''
       end
     end
